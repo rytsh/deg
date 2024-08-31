@@ -6,6 +6,7 @@ import (
 	"io"
 
 	"github.com/rytsh/deg/internal/parser"
+	"github.com/rytsh/deg/internal/token"
 )
 
 const PROMPT = ">> "
@@ -24,8 +25,8 @@ func Start(in io.Reader, out io.Writer) {
 		}
 
 		l := parser.NewLexer(line)
-		for token := l.NextToken(); token.Type != parser.EOF; token = l.NextToken() {
-			fmt.Fprintf(out, "%+v\n", token)
+		for t := l.NextToken(); t.Type != token.EOF; t = l.NextToken() {
+			fmt.Fprintf(out, "%+v\n", t)
 		}
 	}
 }

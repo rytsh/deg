@@ -1,5 +1,7 @@
 package parser
 
+import "github.com/rytsh/deg/internal/token"
+
 type Lexer struct {
 	input string
 
@@ -21,8 +23,8 @@ func NewLexer(input string) *Lexer {
 	return l
 }
 
-func (l *Lexer) NextToken() Token {
-	var tok Token
+func (l *Lexer) NextToken() token.Token {
+	var tok token.Token
 
 	l.skipWhitespace()
 
@@ -31,56 +33,56 @@ func (l *Lexer) NextToken() Token {
 		if l.peakChar() == '=' {
 			ch := l.ch
 			l.readChar()
-			tok = Token{Type: EQ, Literal: string(ch) + string(l.ch)}
+			tok = token.Token{Type: token.EQ, Literal: string(ch) + string(l.ch)}
 		} else {
-			tok = NewToken(ASSIGN, l.ch)
+			tok = token.NewToken(token.ASSIGN, l.ch)
 		}
 	case ';':
-		tok = NewToken(SEMICOLON, l.ch)
+		tok = token.NewToken(token.SEMICOLON, l.ch)
 	case '(':
-		tok = NewToken(LPAREN, l.ch)
+		tok = token.NewToken(token.LPAREN, l.ch)
 	case ')':
-		tok = NewToken(RPAREN, l.ch)
+		tok = token.NewToken(token.RPAREN, l.ch)
 	case ',':
-		tok = NewToken(COMMA, l.ch)
+		tok = token.NewToken(token.COMMA, l.ch)
 	case '+':
-		tok = NewToken(PLUS, l.ch)
+		tok = token.NewToken(token.PLUS, l.ch)
 	case '{':
-		tok = NewToken(LBRACE, l.ch)
+		tok = token.NewToken(token.LBRACE, l.ch)
 	case '}':
-		tok = NewToken(RBRACE, l.ch)
+		tok = token.NewToken(token.RBRACE, l.ch)
 	case '-':
-		tok = NewToken(MINUS, l.ch)
+		tok = token.NewToken(token.MINUS, l.ch)
 	case '!':
 		if l.peakChar() == '=' {
 			ch := l.ch
 			l.readChar()
-			tok = Token{Type: NE, Literal: string(ch) + string(l.ch)}
+			tok = token.Token{Type: token.NE, Literal: string(ch) + string(l.ch)}
 		} else {
-			tok = NewToken(BANG, l.ch)
+			tok = token.NewToken(token.BANG, l.ch)
 		}
 	case '*':
-		tok = NewToken(ASTERISK, l.ch)
+		tok = token.NewToken(token.ASTERISK, l.ch)
 	case '/':
-		tok = NewToken(SLASH, l.ch)
+		tok = token.NewToken(token.SLASH, l.ch)
 	case '<':
-		tok = NewToken(LT, l.ch)
+		tok = token.NewToken(token.LT, l.ch)
 	case '>':
-		tok = NewToken(GT, l.ch)
+		tok = token.NewToken(token.GT, l.ch)
 	case 0:
 		tok.Literal = ""
-		tok.Type = EOF
+		tok.Type = token.EOF
 	default:
 		if isLetter(l.ch) {
 			tok.Literal = l.readIdentifier()
-			tok.Type = LookupIdent(tok.Literal)
+			tok.Type = token.LookupIdent(tok.Literal)
 			return tok
 		} else if isDigit(l.ch) {
-			tok.Type = INT
+			tok.Type = token.INT
 			tok.Literal = l.readNumber()
 			return tok
 		} else {
-			tok = NewToken(ILLEGAL, l.ch)
+			tok = token.NewToken(token.ILLEGAL, l.ch)
 		}
 	}
 
