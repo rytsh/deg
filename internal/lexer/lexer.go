@@ -1,4 +1,4 @@
-package parser
+package lexer
 
 import "github.com/rytsh/deg/internal/token"
 
@@ -13,7 +13,7 @@ type Lexer struct {
 	ch           byte // current char under examination
 }
 
-func NewLexer(input string) *Lexer {
+func New(input string) *Lexer {
 	l := &Lexer{
 		input: input,
 		line:  1,

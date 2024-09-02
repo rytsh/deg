@@ -3,8 +3,10 @@ package args
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"os"
 
+	"github.com/rakunlabs/into"
 	"github.com/rytsh/deg/internal/config"
 	"github.com/rytsh/deg/internal/repl"
 	"github.com/spf13/cobra"
@@ -29,7 +31,12 @@ func init() {
 	replCmd.Flags().BoolVarP(&replFlags.NoBanner, "no-banner", "b", false, "hide banner")
 }
 
-func runRepl(_ context.Context) error {
+func runRepl(ctx context.Context) error {
+	into.SetCtxCancelFn(ctx, func(cancel context.CancelFunc) {
+		fmt.Print("\n")
+		slog.Warn("send end-of-file signal or use 'exit' command")
+	})
+
 	if !replFlags.NoBanner {
 		fmt.Println("deg " + config.Info())
 	}

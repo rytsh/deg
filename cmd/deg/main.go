@@ -2,11 +2,10 @@ package main
 
 import (
 	"context"
-	"sync"
 
 	"github.com/rytsh/deg/internal/config"
-	"github.com/worldline-go/initializer"
 
+	"github.com/rakunlabs/into"
 	"github.com/rakunlabs/logi"
 	"github.com/rytsh/deg/cmd/deg/args"
 )
@@ -22,14 +21,13 @@ func main() {
 	config.Build.Date = date
 	config.Build.Commit = commit
 
-	initializer.Init(
+	into.Init(
 		run,
-		initializer.WithInitLog(false),
-		initializer.WithLogger(initializer.Slog),
-		initializer.WithOptionsLogi(logi.WithCaller(false)),
+		into.WithStartFn(nil), into.WithStopFn(nil),
+		into.WithLogger(logi.InitializeLog(logi.WithCaller(false))),
 	)
 }
 
-func run(ctx context.Context, _ *sync.WaitGroup) error {
+func run(ctx context.Context) error {
 	return args.Execute(ctx)
 }

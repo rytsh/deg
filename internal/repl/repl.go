@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/rytsh/deg/internal/parser"
+	"github.com/rytsh/deg/internal/lexer"
 	"github.com/rytsh/deg/internal/token"
 )
 
@@ -24,7 +24,7 @@ func Start(in io.Reader, out io.Writer) {
 			break
 		}
 
-		l := parser.NewLexer(line)
+		l := lexer.New(line)
 		for t := l.NextToken(); t.Type != token.EOF; t = l.NextToken() {
 			fmt.Fprintf(out, "%+v\n", t)
 		}
